@@ -70,6 +70,38 @@
     scrollbar-width:none;
   }
   .scroll::-webkit-scrollbar{display:none;}
+  .admin-authed-wrap{
+    display:flex; flex-direction:column; flex:1; min-height:0;
+  }
+
+  /* ---------- Artikel Pilihan (Beranda) ---------- */
+  .article-card{
+    position:relative; overflow:hidden; cursor:pointer;
+    margin:2px 22px 6px; border-radius:22px; height:150px;
+    border:1px solid rgba(212,175,55,0.4);
+    box-shadow:0 14px 26px -10px var(--shadow-soft);
+    display:flex; align-items:flex-end;
+    transition:transform .25s ease;
+  }
+  .article-card:active{ transform:scale(0.97); }
+  .article-card .card-bg{ position:absolute; inset:0; width:100%; height:100%; z-index:0; }
+  .article-card::before{
+    content:''; position:absolute; inset:0; z-index:1;
+    background:linear-gradient(180deg, rgba(4,26,21,0) 15%, rgba(4,26,21,0.92) 100%);
+  }
+  .article-body{ position:relative; z-index:2; padding:14px 18px; width:100%; }
+  .article-tag{
+    display:inline-block; font-size:9.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;
+    color:var(--forest); background:var(--gold); padding:3px 9px; border-radius:8px; margin-bottom:6px;
+  }
+  .article-body h4{ margin:0 0 4px; font-family:'Cormorant Garamond',serif; font-size:16px; color:var(--cream); font-weight:700; }
+  .article-body p{ margin:0; font-size:10.5px; color:rgba(245,233,211,0.8); line-height:1.4; }
+
+  .body-diagram-wrap{
+    padding:6px 24px 4px; display:flex; justify-content:center;
+  }
+  .body-diagram-wrap svg{ width:100%; max-width:230px; height:auto; }
+  .body-diagram-wrap img{ width:100%; max-width:260px; height:auto; border-radius:18px; box-shadow:0 14px 26px -10px var(--shadow); border:1px solid rgba(212,175,55,0.4); }
 
   /* ---------- header ---------- */
   .app-header{
@@ -231,7 +263,7 @@
     background:linear-gradient(180deg, #eef1ea 0%, #d8e2d4 60%, #b9c9bd 100%);
   }
   .mat-card.mosque::before{ content:''; position:absolute; inset:0; z-index:1;
-    background:linear-gradient(180deg, rgba(238,241,234,0) 30%, rgba(238,241,234,0.92) 100%); }
+    background:linear-gradient(180deg, rgba(10,10,20,0) 40%, rgba(8,8,18,0.85) 100%); }
   .mat-card.dark{
     background:linear-gradient(160deg, var(--emerald), var(--forest));
   }
@@ -244,12 +276,14 @@
   .mat-card .cap{
     font-weight:700; font-size:11.5px; position:relative; z-index:2; line-height:1.25;
   }
-  .mat-card.ivory .cap, .mat-card.mosque .cap{ color:var(--forest); }
+  .mat-card.ivory .cap{ color:var(--forest); }
+  .mat-card.mosque .cap{ color:var(--champagne); }
   .mat-card.dark .cap{ color:var(--cream); }
   .mat-card .sub{
     font-size:9.5px; opacity:0.75; margin-top:2px; position:relative; z-index:2;
   }
-  .mat-card.ivory .sub, .mat-card.mosque .sub{ color:var(--moss); }
+  .mat-card.ivory .sub{ color:var(--moss); }
+  .mat-card.mosque .sub{ color:rgba(245,233,211,0.8); }
   .mat-card.dark .sub{ color:var(--champagne); }
 
   /* ---------- category grid ---------- */
@@ -729,15 +763,25 @@
           <div class="row-scroll">
             <div class="mat-card ivory" onclick="goView('alif')">
               <svg class="card-bg" viewBox="0 0 200 150" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-                <rect width="200" height="150" fill="#F8F1DD"/>
-                <g stroke="#D4AF37" stroke-width="0.7" opacity="0.4" fill="none">
-                  <path d="M20 20l8 8-8 8-8-8z M60 20l8 8-8 8-8-8z M100 20l8 8-8 8-8-8z M140 20l8 8-8 8-8-8z M180 20l8 8-8 8-8-8z
-                           M20 60l8 8-8 8-8-8z M60 60l8 8-8 8-8-8z M100 60l8 8-8 8-8-8z M140 60l8 8-8 8-8-8z M180 60l8 8-8 8-8-8z
-                           M20 100l8 8-8 8-8-8z M60 100l8 8-8 8-8-8z M100 100l8 8-8 8-8-8z M140 100l8 8-8 8-8-8z M180 100l8 8-8 8-8-8z
-                           M40 40l8 8-8 8-8-8z M80 40l8 8-8 8-8-8z M120 40l8 8-8 8-8-8z M160 40l8 8-8 8-8-8z
-                           M40 80l8 8-8 8-8-8z M80 80l8 8-8 8-8-8z M120 80l8 8-8 8-8-8z M160 80l8 8-8 8-8-8z
-                           M40 120l8 8-8 8-8-8z M80 120l8 8-8 8-8-8z M120 120l8 8-8 8-8-8z M160 120l8 8-8 8-8-8z"/>
+                <defs>
+                  <radialGradient id="parchG" cx="50%" cy="30%" r="80%">
+                    <stop offset="0%" stop-color="#FFF9E8"/>
+                    <stop offset="60%" stop-color="#F3E3B8"/>
+                    <stop offset="100%" stop-color="#E4CD8E"/>
+                  </radialGradient>
+                </defs>
+                <rect width="200" height="150" fill="url(#parchG)"/>
+                <g stroke="#B8892A" stroke-width="1.1" opacity="0.55" fill="none">
+                  <path d="M20 20l10 10-10 10-10-10z M60 20l10 10-10 10-10-10z M100 20l10 10-10 10-10-10z M140 20l10 10-10 10-10-10z M180 20l10 10-10 10-10-10z
+                           M20 60l10 10-10 10-10-10z M60 60l10 10-10 10-10-10z M100 60l10 10-10 10-10-10z M140 60l10 10-10 10-10-10z M180 60l10 10-10 10-10-10z
+                           M20 100l10 10-10 10-10-10z M60 100l10 10-10 10-10-10z M100 100l10 10-10 10-10-10z M140 100l10 10-10 10-10-10z M180 100l10 10-10 10-10-10z
+                           M40 40l10 10-10 10-10-10z M80 40l10 10-10 10-10-10z M120 40l10 10-10 10-10-10z M160 40l10 10-10 10-10-10z
+                           M40 80l10 10-10 10-10-10z M80 80l10 10-10 10-10-10z M120 80l10 10-10 10-10-10z M160 80l10 10-10 10-10-10z
+                           M40 120l10 10-10 10-10-10z M80 120l10 10-10 10-10-10z M120 120l10 10-10 10-10-10z M160 120l10 10-10 10-10-10z"/>
                 </g>
+                <circle cx="100" cy="75" r="46" fill="none" stroke="#0F5B46" stroke-width="1.4" opacity="0.28"/>
+                <circle cx="100" cy="75" r="34" fill="none" stroke="#0F5B46" stroke-width="1" opacity="0.22"/>
+                <rect x="6" y="6" width="188" height="138" rx="14" fill="none" stroke="#B8892A" stroke-width="2" opacity="0.5"/>
               </svg>
               <div class="big-letter">ا</div>
               <div class="cap">Rahasia Alif</div>
@@ -747,31 +791,58 @@
               <svg class="card-bg" viewBox="0 0 200 150" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#f6e7c8"/>
-                    <stop offset="55%" stop-color="#dce6d6"/>
-                    <stop offset="100%" stop-color="#b9c9bd"/>
+                    <stop offset="0%" stop-color="#f6c98a"/>
+                    <stop offset="35%" stop-color="#eb9e83"/>
+                    <stop offset="65%" stop-color="#a9678f"/>
+                    <stop offset="100%" stop-color="#3d3466"/>
                   </linearGradient>
+                  <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#fff8dc"/>
+                    <stop offset="100%" stop-color="#ffe9a8" stop-opacity="0"/>
+                  </radialGradient>
                 </defs>
                 <rect width="200" height="150" fill="url(#skyG)"/>
-                <circle cx="160" cy="32" r="13" fill="#fff3d6" opacity="0.9"/>
-                <path d="M0 150 L0 112 Q100 62 200 112 L200 150 Z" fill="#5c6f63" opacity="0.55"/>
-                <circle cx="100" cy="80" r="17" fill="#4a5c50" opacity="0.6"/>
-                <rect x="29" y="92" width="6" height="38" fill="#4a5c50" opacity="0.6"/>
-                <circle cx="32" cy="88" r="5" fill="#4a5c50" opacity="0.6"/>
-                <rect x="165" y="92" width="6" height="38" fill="#4a5c50" opacity="0.6"/>
-                <circle cx="168" cy="88" r="5" fill="#4a5c50" opacity="0.6"/>
+                <circle cx="158" cy="34" r="26" fill="url(#moonGlow)"/>
+                <circle cx="158" cy="32" r="13" fill="#fffbe8"/>
+                <circle cx="20" cy="18" r="1.4" fill="#fff" opacity="0.8"/>
+                <circle cx="45" cy="12" r="1" fill="#fff" opacity="0.6"/>
+                <circle cx="75" cy="20" r="1.2" fill="#fff" opacity="0.7"/>
+                <circle cx="110" cy="14" r="1" fill="#fff" opacity="0.5"/>
+                <path d="M0 150 L0 108 Q100 55 200 108 L200 150 Z" fill="#20232f" opacity="0.88"/>
+                <circle cx="100" cy="76" r="20" fill="#161a26" opacity="0.92"/>
+                <path d="M80 76 a20 20 0 0 1 40 0 z" fill="#161a26" opacity="0.92"/>
+                <circle cx="100" cy="55" r="3" fill="#D4AF37" opacity="0.9"/>
+                <rect x="27" y="88" width="7" height="44" fill="#161a26" opacity="0.9"/>
+                <circle cx="30.5" cy="84" r="6" fill="#161a26" opacity="0.9"/>
+                <rect x="166" y="88" width="7" height="44" fill="#161a26" opacity="0.9"/>
+                <circle cx="169.5" cy="84" r="6" fill="#161a26" opacity="0.9"/>
+                <rect x="45" y="120" width="110" height="30" fill="#161a26" opacity="0.85"/>
               </svg>
               <div class="cap">Rahasia Nafas</div>
               <div class="sub">Empat Nafas</div>
             </div>
             <div class="mat-card dark" onclick="openTabMateri('nama-allah','beranda')">
               <svg class="card-bg" viewBox="0 0 200 150" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-                <rect width="200" height="150" fill="#0F5B46"/>
-                <rect width="200" height="150" fill="#062D27" opacity="0.45"/>
-                <g stroke="#D4AF37" stroke-width="1" opacity="0.32" fill="none">
+                <defs>
+                  <radialGradient id="darkG" cx="50%" cy="45%" r="75%">
+                    <stop offset="0%" stop-color="#12704f"/>
+                    <stop offset="55%" stop-color="#0b3d31"/>
+                    <stop offset="100%" stop-color="#041c17"/>
+                  </radialGradient>
+                  <radialGradient id="glowG" cx="50%" cy="52%" r="35%">
+                    <stop offset="0%" stop-color="#f3d47a" stop-opacity="0.55"/>
+                    <stop offset="100%" stop-color="#f3d47a" stop-opacity="0"/>
+                  </radialGradient>
+                </defs>
+                <rect width="200" height="150" fill="url(#darkG)"/>
+                <circle cx="100" cy="78" r="60" fill="url(#glowG)"/>
+                <g stroke="#E6C068" stroke-width="1.3" opacity="0.55" fill="none">
                   <circle cx="100" cy="78" r="55"/>
                   <circle cx="100" cy="78" r="40"/>
                   <path d="M100 23 L112 63 L152 63 L120 87 L132 127 L100 103 L68 127 L80 87 L48 63 L88 63 Z"/>
+                </g>
+                <g stroke="#D4AF37" stroke-width="0.8" opacity="0.3" fill="none">
+                  <path d="M100 8 L100 148 M8 78 L192 78 M29 29 L171 127 M171 29 L29 127"/>
                 </g>
               </svg>
               <div class="arabic">الله</div>
@@ -790,6 +861,39 @@
             <div class="cat-item" onclick="goView('kutipan')"><div class="ic"><svg viewBox="0 0 24 24" class="icon"><path d="M8 10a3 3 0 00-3 3v3h5v-3H7"/><path d="M19 10a3 3 0 00-3 3v3h5v-3h-3"/></svg></div><span>Kutipan Hikmah</span></div>
             <div class="cat-item" onclick="goView('favorit')"><div class="ic"><svg viewBox="0 0 24 24" class="icon"><path d="M12 20l-7-7a4.5 4.5 0 016-6l1 1 1-1a4.5 4.5 0 016 6z"/></svg></div><span>Favorit</span></div>
             <div class="cat-item" onclick="goView('pengaturan')"><div class="ic"><svg viewBox="0 0 24 24" class="icon"><circle cx="12" cy="12" r="3"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M5 5l1.5 1.5"/><path d="M17.5 17.5L19 19"/><path d="M5 19l1.5-1.5"/><path d="M17.5 6.5L19 5"/></svg></div><span>Pengaturan</span></div>
+          </div>
+
+          <div class="section-head"><h3>Artikel Pilihan</h3></div>
+          <div class="article-card" onclick="goView('anatomi')">
+            <svg class="card-bg" viewBox="0 0 320 170" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="artG" cx="75%" cy="30%" r="90%">
+                  <stop offset="0%" stop-color="#124a3c"/>
+                  <stop offset="55%" stop-color="#0b3128"/>
+                  <stop offset="100%" stop-color="#041a15"/>
+                </radialGradient>
+              </defs>
+              <rect width="320" height="170" fill="url(#artG)"/>
+              <g stroke="#D4AF37" stroke-width="1" opacity="0.28" fill="none">
+                <circle cx="256" cy="45" r="60"/>
+                <circle cx="256" cy="45" r="42"/>
+              </g>
+              <!-- figur tubuh manusia sederhana -->
+              <g fill="#E6C068" opacity="0.85">
+                <circle cx="256" cy="30" r="9"/>
+                <path d="M256 39 q-16 6 -16 26 l0 30 q0 8 8 8 l16 0 l16 0 q8 0 8 -8 l0 -30 q0 -20 -16 -26 z" opacity="0.9"/>
+                <path d="M240 55 l-14 22" stroke="#E6C068" stroke-width="4" stroke-linecap="round"/>
+                <path d="M272 55 l14 22" stroke="#E6C068" stroke-width="4" stroke-linecap="round"/>
+                <path d="M246 103 l-6 34" stroke="#E6C068" stroke-width="5" stroke-linecap="round"/>
+                <path d="M266 103 l6 34" stroke="#E6C068" stroke-width="5" stroke-linecap="round"/>
+              </g>
+              <circle cx="256" cy="58" r="2.2" fill="#0F5B46"/>
+            </svg>
+            <div class="article-body">
+              <span class="article-tag" id="articleTag">Hakikat &amp; Makrifat</span>
+              <h4 id="articleTitle">Mengenal Anatomi Tubuh Manusia</h4>
+              <p id="articleDesc">Rahasia di balik kepala, hati, tangan, dan tiap anggota tubuh — dari kacamata Syariat hingga Makrifat</p>
+            </div>
           </div>
         </div>
         <div class="bottom-nav" id="nav-beranda"></div>
@@ -939,6 +1043,62 @@
           <div class="detail-content" id="nafasContent"></div>
         </div>
         <div class="bottom-nav" id="nav-nafas"></div>
+      </div>
+
+      <!-- ============ ANATOMI TUBUH ============ -->
+      <div class="view" data-view="anatomi">
+        <div class="statusbar"><span>9:41</span><div class="icons">📶 🛜 🔋</div></div>
+        <div class="app-header">
+          <div class="icon-btn" onclick="goView('beranda')">‹</div>
+          <div class="header-title" style="font-size:16px;">Anatomi Tubuh</div>
+          <div class="icon-btn" onclick="toggleFav(this)">♡</div>
+        </div>
+        <div class="scroll">
+          <div class="detail-hero">
+            <div class="letter-badge" id="anatomiIc"></div>
+            <h2 style="font-size:19px;">Rahasia Anatomi Tubuh</h2>
+            <p>Mikrokosmos Insān Kāmil</p>
+          </div>
+
+          <div class="body-diagram-wrap" id="bodyDiagramWrap">
+            <svg viewBox="0 0 220 240" xmlns="http://www.w3.org/2000/svg">
+              <!-- siluet tubuh -->
+              <g fill="#0F5B46" opacity="0.85">
+                <circle cx="110" cy="34" r="20"/>
+                <path d="M110 54 q-30 10 -30 46 l0 50 q0 12 12 12 l36 0 l36 0 q12 0 12 -12 l0 -50 q0 -36 -30 -46 z"/>
+                <path d="M80 78 l-24 40" stroke="#0F5B46" stroke-width="9" stroke-linecap="round"/>
+                <path d="M140 78 l24 40" stroke="#0F5B46" stroke-width="9" stroke-linecap="round"/>
+                <path d="M96 162 l-8 56" stroke="#0F5B46" stroke-width="11" stroke-linecap="round"/>
+                <path d="M124 162 l8 56" stroke="#0F5B46" stroke-width="11" stroke-linecap="round"/>
+              </g>
+              <!-- titik penanda -->
+              <circle cx="110" cy="30" r="4.5" fill="#D4AF37"/>
+              <circle cx="110" cy="60" r="4.5" fill="#D4AF37"/>
+              <circle cx="110" cy="95" r="4.5" fill="#D4AF37"/>
+              <circle cx="60" cy="112" r="4.5" fill="#D4AF37"/>
+              <circle cx="110" cy="205" r="4.5" fill="#D4AF37"/>
+              <!-- garis penunjuk & label -->
+              <g stroke="#D4AF37" stroke-width="1" opacity="0.6">
+                <line x1="114" y1="30" x2="176" y2="18"/>
+                <line x1="114" y1="60" x2="182" y2="60"/>
+                <line x1="114" y1="95" x2="182" y2="100"/>
+                <line x1="56" y1="112" x2="14" y2="130"/>
+                <line x1="114" y1="205" x2="176" y2="215"/>
+              </g>
+              <g font-family="Cormorant Garamond, serif" font-size="12" font-weight="700" fill="#0F5B46">
+                <text x="178" y="16">Kepala</text>
+                <text x="184" y="58">Mata &amp; Telinga</text>
+                <text x="184" y="98">Qalb (Hati)</text>
+                <text x="10" y="146">Pusar</text>
+                <text x="178" y="213">Tangan &amp; Kaki</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="tab-row" id="anatomiTabs"></div>
+          <div class="detail-content" id="anatomiContent"></div>
+        </div>
+        <div class="bottom-nav" id="nav-anatomi"></div>
       </div>
 
       <!-- ============ DZIKIR & RIYADHOH ============ -->
@@ -1776,13 +1936,31 @@
         </div>
 
         <!-- ===== Isi Dashboard (tampil setelah kata sandi benar) ===== -->
-        <div id="adminAuthedArea" style="display:none;">
+        <div class="admin-authed-wrap" id="adminAuthedArea" style="display:none;">
           <div class="scroll">
             <div class="admin-note">Kelola tampilan Beranda dan isi Perpustakaan dari sini. Perubahan berlaku langsung selama sesi aplikasi ini terbuka.</div>
 
             <div class="admin-card">
               <h4>Banner Hero Beranda <span id="heroCountBadge">3 Slide</span></h4>
               <div id="heroAdminList"></div>
+            </div>
+
+            <div class="admin-card">
+              <h4>Artikel Pilihan</h4>
+              <div class="admin-note" style="padding:0 0 10px;">Kelola kartu artikel "Anatomi Tubuh" di Beranda, termasuk mengganti gambar diagram tubuh di halaman detailnya.</div>
+              <label class="field-label">Label / Tag</label>
+              <input class="admin-input" id="artInTag" value="Hakikat &amp; Makrifat" oninput="debounceKeyed('art-tag', function(){ saveArticleSettings(true); }, 700)">
+              <label class="field-label">Judul Artikel</label>
+              <input class="admin-input" id="artInTitle" value="Mengenal Anatomi Tubuh Manusia" oninput="debounceKeyed('art-title', function(){ saveArticleSettings(true); }, 700)">
+              <label class="field-label">Deskripsi Singkat</label>
+              <textarea class="admin-textarea" id="artInDesc" rows="2" oninput="debounceKeyed('art-desc', function(){ saveArticleSettings(true); }, 700)">Rahasia di balik kepala, hati, tangan, dan tiap anggota tubuh — dari kacamata Syariat hingga Makrifat</textarea>
+              <label class="field-label">Unggah Gambar Diagram Tubuh</label>
+              <input class="admin-input" type="file" accept="image/*" id="artInImgFile" onchange="handleArticleImageUpload()">
+              <div id="artImgUploadStatus" style="font-size:11px; color:var(--emerald); margin-top:6px;"></div>
+              <label class="field-label">Atau tempel URL Gambar</label>
+              <input class="admin-input" id="artInImgUrl" placeholder="https://contoh.com/gambar-anatomi.jpg" oninput="debounceKeyed('art-img', function(){ saveArticleSettings(true); }, 900)">
+              <div class="admin-note" style="padding:6px 0 0;">✓ Tersimpan otomatis. Kosongkan keduanya &amp; simpan untuk kembali memakai ilustrasi bawaan.</div>
+              <button class="admin-btn gold full" style="margin-top:12px;" onclick="saveArticleSettings()">Simpan Artikel Pilihan</button>
             </div>
 
             <div class="admin-card">
@@ -1871,7 +2049,7 @@
     referensi:'beranda', kutipan:'beranda', favorit:'beranda', pengaturan:'beranda',
     admin:'beranda', 'admin-form':'beranda',
     'set-tampilan':'beranda', 'set-bahasa':'beranda', 'set-unduhan':'beranda', 'set-privasi':'beranda',
-    'buku-reader':'buku', 'peta-detail':'beranda'
+    'buku-reader':'buku', 'peta-detail':'beranda', 'anatomi':'beranda'
   };
 
   document.querySelectorAll('.bottom-nav').forEach(nav=>{
@@ -1887,6 +2065,37 @@
       target.classList.add('active');
       const scroller = target.querySelector('.scroll');
       if(scroller) scroller.scrollTop = 0;
+    }
+  }
+
+  // ---------- Penyimpanan permanen yang tangguh terhadap gangguan sesaat ----------
+  // Membungkus window.storage.set dengan percobaan ulang otomatis, sehingga
+  // error sementara dari server ("Internal server error", jaringan lambat, dll)
+  // tidak langsung dianggap gagal — dicoba ulang dulu sebelum menyerah.
+  let storageAvailable = true;
+  async function safeStorageSet(key, value, shared, retries){
+    if(retries === undefined) retries = 2;
+    if(typeof window.storage === 'undefined'){ storageAvailable = false; return null; }
+    try{
+      const result = await window.storage.set(key, value, shared || false);
+      storageAvailable = true;
+      return result;
+    }catch(err){
+      if(retries > 0){
+        await new Promise(r=> setTimeout(r, 900));
+        return safeStorageSet(key, value, shared, retries - 1);
+      }
+      storageAvailable = false;
+      console.error(`Gagal menyimpan data (${key}) setelah beberapa percobaan:`, err);
+      return null;
+    }
+  }
+  async function safeStorageGet(key, shared){
+    if(typeof window.storage === 'undefined') return null;
+    try{
+      return await window.storage.get(key, shared || false);
+    }catch(err){
+      return null; // key belum pernah dibuat, atau gangguan sesaat — aman diabaikan
     }
   }
 
@@ -2183,6 +2392,173 @@
   function selectNafas(i){ nafasActive = i; renderNafas(); }
   renderNafas();
 
+  // ---------- ANATOMI TUBUH: Mikrokosmos Insan Kamil ----------
+  const anatomiData = [
+    { label:'Syariat', heading:'Batasan & Hukum Anggota Tubuh',
+      intro:'Syariat mengatur batas dan hukum tiap anggota tubuh:',
+      list:[
+        'Aurat — batas tubuh yang wajib ditutup, berbeda bagi laki-laki dan perempuan',
+        'Anggota wudhu — wajib dibasuh: wajah, tangan hingga siku, kepala, kaki hingga mata kaki',
+        'Tujuh anggota sujud — dahi, dua telapak tangan, dua lutut, dua ujung kaki',
+        'Larangan menyakiti tubuh — tubuh adalah amanah, haram disakiti tanpa alasan syar\'i'
+      ],
+      note:'Rasulullah ﷺ bersabda: "Sesungguhnya tubuhmu punya hak atas dirimu." (HR. Bukhari)'
+    },
+    { label:'Tarekat', heading:'Melatih Anggota Tubuh dalam Dzikir',
+      groups:[
+        { label:'Mata &amp; Telinga', items:[
+          'Menahan pandangan dari yang haram (ghadul bashar)',
+          'Mendengarkan dzikir &amp; ayat suci, menjauhi ghibah'
+        ]},
+        { label:'Lisan', items:[
+          'Basah dengan dzikir "La ilaha illallah"',
+          'Menjaga dari perkataan sia-sia'
+        ]},
+        { label:'Tangan &amp; Kaki', items:[
+          'Digunakan untuk amal saleh dan menolong sesama',
+          'Melangkah menuju majelis ilmu dan ibadah'
+        ]},
+      ],
+      note:'Riyadhah tubuh (puasa, shalat malam) menundukkan syahwat yang bersemayam di tiap anggota.'
+    },
+    { label:'Hakikat', heading:'Tubuh sebagai Singgasana Asma Allah',
+      intro:'Tiap anggota tubuh mencerminkan satu Asma atau Sifat Allah:',
+      list:[
+        'Kepala — singgasana Al-\'Alim (Yang Maha Mengetahui), tempat akal &amp; ilmu',
+        'Mata — pancaran Al-Bashir (Yang Maha Melihat)',
+        'Telinga — pancaran As-Sami\' (Yang Maha Mendengar)',
+        'Qalb (hati) — "Baitullah" kecil, singgasana Ar-Rahman bila bersih dari selain-Nya',
+        'Tangan &amp; kaki — pancaran Al-Qadir (Yang Maha Kuasa) dalam berbuat'
+      ],
+      note:'Hadits Qudsi: "Tidak muat bumi dan langit-Ku menampung-Ku, tetapi hati hamba-Ku yang beriman menampung-Ku."'
+    },
+    { label:'Makrifat', heading:'Tubuh sebagai Alam Kecil (Mikrokosmos)',
+      intro:'Tubuh manusia adalah miniatur dari alam semesta (alam kabir) — disebut juga "alam shaghir":',
+      list:[
+        'Tulang &amp; daging — pancaran unsur Tanah',
+        'Darah &amp; cairan tubuh — pancaran unsur Air',
+        'Nafas &amp; panas tubuh — pancaran unsur Api &amp; Angin',
+        'Ruh yang menghidupkan — pancaran langsung dari Nur Muhammad'
+      ],
+      note:'"Man \'arafa nafsahu faqad \'arafa Rabbahu" — Barangsiapa mengenal dirinya, maka ia mengenal Tuhannya. Mengenal anatomi diri adalah pintu mengenal Sang Pencipta.'
+    },
+  ];
+  let anatomiActive = 0;
+  function renderAnatomi(){
+    document.getElementById('anatomiIc').innerHTML = badgeSVG('🧍');
+    document.getElementById('anatomiTabs').innerHTML = anatomiData.map((t,i)=>
+      `<div class="tab-btn ${i===anatomiActive?'on':''}" onclick="selectAnatomi(${i})">${t.label}</div>`).join('');
+    const d = anatomiData[anatomiActive];
+    document.getElementById('anatomiContent').innerHTML = `<h5>${d.heading}</h5>${renderTabBody(d)}`;
+  }
+  function selectAnatomi(i){ anatomiActive = i; renderAnatomi(); }
+  renderAnatomi();
+
+  // ---------- Artikel Pilihan (Beranda) — dikelola dari Dashboard Admin ----------
+  const ORIGINAL_BODY_DIAGRAM_SVG = `<svg viewBox="0 0 220 240" xmlns="http://www.w3.org/2000/svg">
+    <g fill="#0F5B46" opacity="0.85">
+      <circle cx="110" cy="34" r="20"/>
+      <path d="M110 54 q-30 10 -30 46 l0 50 q0 12 12 12 l36 0 l36 0 q12 0 12 -12 l0 -50 q0 -36 -30 -46 z"/>
+      <path d="M80 78 l-24 40" stroke="#0F5B46" stroke-width="9" stroke-linecap="round"/>
+      <path d="M140 78 l24 40" stroke="#0F5B46" stroke-width="9" stroke-linecap="round"/>
+      <path d="M96 162 l-8 56" stroke="#0F5B46" stroke-width="11" stroke-linecap="round"/>
+      <path d="M124 162 l8 56" stroke="#0F5B46" stroke-width="11" stroke-linecap="round"/>
+    </g>
+    <circle cx="110" cy="30" r="4.5" fill="#D4AF37"/>
+    <circle cx="110" cy="60" r="4.5" fill="#D4AF37"/>
+    <circle cx="110" cy="95" r="4.5" fill="#D4AF37"/>
+    <circle cx="60" cy="112" r="4.5" fill="#D4AF37"/>
+    <circle cx="110" cy="205" r="4.5" fill="#D4AF37"/>
+    <g stroke="#D4AF37" stroke-width="1" opacity="0.6">
+      <line x1="114" y1="30" x2="176" y2="18"/>
+      <line x1="114" y1="60" x2="182" y2="60"/>
+      <line x1="114" y1="95" x2="182" y2="100"/>
+      <line x1="56" y1="112" x2="14" y2="130"/>
+      <line x1="114" y1="205" x2="176" y2="215"/>
+    </g>
+    <g font-family="Cormorant Garamond, serif" font-size="12" font-weight="700" fill="#0F5B46">
+      <text x="178" y="16">Kepala</text>
+      <text x="184" y="58">Mata &amp; Telinga</text>
+      <text x="184" y="98">Qalb (Hati)</text>
+      <text x="10" y="146">Pusar</text>
+      <text x="178" y="213">Tangan &amp; Kaki</text>
+    </g>
+  </svg>`;
+
+  function handleArticleImageUpload(){
+    const fileInput = document.getElementById('artInImgFile');
+    const statusEl = document.getElementById('artImgUploadStatus');
+    const file = fileInput.files[0];
+    if(!file) return;
+    statusEl.textContent = 'Memproses gambar...';
+    const reader = new FileReader();
+    reader.onload = e => {
+      fileInput.dataset.uploaded = e.target.result;
+      document.getElementById('artInImgUrl').value = '';
+      statusEl.textContent = 'Gambar "' + file.name + '" berhasil diunggah ✓';
+      saveArticleSettings(true);
+    };
+    reader.onerror = () => { statusEl.textContent = 'Gagal membaca file gambar.'; };
+    reader.readAsDataURL(file);
+  }
+
+  function saveArticleSettings(silent){
+    const tag = document.getElementById('artInTag').value.trim();
+    const title = document.getElementById('artInTitle').value.trim();
+    const desc = document.getElementById('artInDesc').value.trim();
+    const imgUrl = document.getElementById('artInImgUrl').value.trim();
+    const uploadedImg = document.getElementById('artInImgFile').dataset.uploaded;
+    const finalImg = uploadedImg || imgUrl;
+
+    if(tag) document.getElementById('articleTag').innerHTML = tag;
+    if(title) document.getElementById('articleTitle').textContent = title;
+    if(desc) document.getElementById('articleDesc').textContent = desc;
+
+    const wrap = document.getElementById('bodyDiagramWrap');
+    if(finalImg){
+      wrap.innerHTML = `<img src="${finalImg}" alt="Diagram Anatomi Tubuh" onerror="this.onerror=null; this.parentNode.innerHTML=ORIGINAL_BODY_DIAGRAM_SVG; showToast('Gagal memuat gambar, kembali ke ilustrasi bawaan');">`;
+    } else {
+      wrap.innerHTML = ORIGINAL_BODY_DIAGRAM_SVG;
+    }
+
+    showToast(silent ? 'Tersimpan otomatis ✓' : 'Artikel Pilihan berhasil disimpan');
+    persistArticleSettings(finalImg);
+  }
+
+  async function persistArticleSettings(imgOverride){
+    const imgUrl = imgOverride !== undefined ? imgOverride : document.getElementById('artInImgUrl').value.trim();
+    const data = {
+      tag: document.getElementById('articleTag').innerHTML,
+      title: document.getElementById('articleTitle').textContent,
+      desc: document.getElementById('articleDesc').textContent,
+      imgUrl: imgUrl
+    };
+    await safeStorageSet('article-pilihan-v1', JSON.stringify(data), true);
+  }
+
+  async function restoreArticleSettings(){
+    const result = await safeStorageGet('article-pilihan-v1', true);
+    if(!result || !result.value) return;
+    try{
+      const data = JSON.parse(result.value);
+      if(data.tag){ document.getElementById('articleTag').innerHTML = data.tag; document.getElementById('artInTag').value = data.tag; }
+      if(data.title){ document.getElementById('articleTitle').textContent = data.title; document.getElementById('artInTitle').value = data.title; }
+      if(data.desc){ document.getElementById('articleDesc').textContent = data.desc; document.getElementById('artInDesc').value = data.desc; }
+      if(data.imgUrl){
+        if(data.imgUrl.startsWith('data:')){
+          document.getElementById('artInImgFile').dataset.uploaded = data.imgUrl;
+          document.getElementById('artImgUploadStatus').textContent = 'Gambar tersimpan sebelumnya ✓';
+        } else {
+          document.getElementById('artInImgUrl').value = data.imgUrl;
+        }
+        document.getElementById('bodyDiagramWrap').innerHTML = `<img src="${data.imgUrl}" alt="Diagram Anatomi Tubuh" onerror="this.onerror=null; this.parentNode.innerHTML=ORIGINAL_BODY_DIAGRAM_SVG; showToast('Gagal memuat gambar, kembali ke ilustrasi bawaan');">`;
+      }
+    }catch(err){
+      // data tersimpan namun rusak/tidak terbaca — abaikan, pakai tampilan bawaan
+    }
+  }
+  restoreArticleSettings();
+
   // ---------- TABMATERI: dokumen lengkap 4 lapis ----------
   const materiData = {
     'nama-allah': { icon:'الله', title:'Rahasia Nama Allah', subtitle:'Ismu Dzat — Sultanul Asma', tabs:[
@@ -2333,6 +2709,8 @@
     ]},
   };
 
+  restoreMateriState();
+
   let tmActive = 0;
   let tmCurrentKey = null;
   let tmSource = 'perpustakaan';
@@ -2398,7 +2776,7 @@
     const authed = document.getElementById('adminAuthedArea');
     if(!gate || !authed) return;
     gate.style.display = adminAuthenticated ? 'none' : 'block';
-    authed.style.display = adminAuthenticated ? 'block' : 'none';
+    authed.style.display = adminAuthenticated ? 'flex' : 'none';
     if(!adminAuthenticated){
       const input = document.getElementById('adminPasswordInput');
       const err = document.getElementById('adminPasswordError');
@@ -2440,12 +2818,13 @@
     wrap.innerHTML = [0,1,2].map(i => `
       <div class="lapis-block">
         <label class="field-label">Slide ${i+1} — Kutipan</label>
-        <textarea class="admin-textarea" id="heroInQuote${i}" rows="2">${document.getElementById('heroQuote'+i).innerHTML.replace(/<br\s*\/?>/gi,'\n')}</textarea>
+        <textarea class="admin-textarea" id="heroInQuote${i}" rows="2" oninput="debounceKeyed('hero-quote-${i}', function(){ saveHeroSlide(${i}, true); }, 800)">${document.getElementById('heroQuote'+i).innerHTML.replace(/<br\s*\/?>/gi,'\n')}</textarea>
         <label class="field-label">Atribusi</label>
-        <input class="admin-input" id="heroInAttr${i}" value="${document.getElementById('heroAttr'+i).textContent}">
+        <input class="admin-input" id="heroInAttr${i}" oninput="debounceKeyed('hero-attr-${i}', function(){ saveHeroSlide(${i}, true); }, 800)" value="${document.getElementById('heroAttr'+i).textContent}">
         <label class="field-label">Gambar Latar Banner (opsional)</label>
         <input class="admin-input" type="file" accept="image/*" id="heroInImg${i}" onchange="previewHeroImage(${i})">
         <button class="admin-btn gold full" onclick="saveHeroSlide(${i})" style="margin-top:10px;">Simpan Slide ${i+1}</button>
+        <div class="admin-note" style="padding:6px 0 0;">✓ Teks tersimpan otomatis saat kamu mengetik</div>
       </div>`).join('');
   }
 
@@ -2454,11 +2833,14 @@
     const file = fileInput.files[0];
     if(!file) return;
     const reader = new FileReader();
-    reader.onload = e => { fileInput.dataset.preview = e.target.result; };
+    reader.onload = e => {
+      fileInput.dataset.preview = e.target.result;
+      saveHeroSlide(i, true);
+    };
     reader.readAsDataURL(file);
   }
 
-  function saveHeroSlide(i){
+  function saveHeroSlide(i, silent){
     const quoteRaw = document.getElementById('heroInQuote'+i).value.trim();
     const attr = document.getElementById('heroInAttr'+i).value.trim();
     const quoteHtml = quoteRaw.split('\n').join('<br>');
@@ -2473,31 +2855,27 @@
       slideEl.style.backgroundSize = 'cover';
       slideEl.style.backgroundPosition = 'center';
     }
-    showToast(`Slide ${i+1} berhasil diperbarui`);
+    showToast(silent ? 'Tersimpan otomatis ✓' : `Slide ${i+1} berhasil diperbarui`);
     persistHeroSlides();
   }
 
   // ---------- Persistensi Hero Banner (agar tidak hilang saat reload / update lain) ----------
   async function persistHeroSlides(){
-    try{
-      const data = [0,1,2].map(i=>{
-        const slideEl = document.getElementById('heroSlide'+i);
-        return {
-          quote: document.getElementById('heroQuote'+i).innerHTML,
-          attr: document.getElementById('heroAttr'+i).textContent,
-          bg: slideEl.style.backgroundImage || ''
-        };
-      });
-      await window.storage.set('hero-slides-v1', JSON.stringify(data), false);
-    }catch(err){
-      console.error('Gagal menyimpan banner hero secara permanen:', err);
-    }
+    const data = [0,1,2].map(i=>{
+      const slideEl = document.getElementById('heroSlide'+i);
+      return {
+        quote: document.getElementById('heroQuote'+i).innerHTML,
+        attr: document.getElementById('heroAttr'+i).textContent,
+        bg: slideEl.style.backgroundImage || ''
+      };
+    });
+    await safeStorageSet('hero-slides-v1', JSON.stringify(data), true);
   }
 
   async function restoreHeroSlides(){
+    const result = await safeStorageGet('hero-slides-v1', true);
+    if(!result || !result.value) return;
     try{
-      const result = await window.storage.get('hero-slides-v1', false);
-      if(!result || !result.value) return;
       const data = JSON.parse(result.value);
       data.forEach((s,i)=>{
         if(s.quote) document.getElementById('heroQuote'+i).innerHTML = s.quote;
@@ -2510,7 +2888,7 @@
         }
       });
     }catch(err){
-      // belum pernah disimpan sebelumnya — abaikan, pakai tampilan bawaan
+      // data tersimpan namun rusak/tidak terbaca — abaikan, pakai tampilan bawaan
     }
   }
   restoreHeroSlides();
@@ -2561,6 +2939,74 @@
     if(card) card.remove();
     renderAdminMateriList();
     showToast('Materi dihapus dari Perpustakaan');
+    persistMateriState();
+  }
+
+  // ---------- Persistensi Materi (Perpustakaan, Alif, Nafas) ----------
+  async function persistMateriState(){
+    const payload = { materiData: materiData, alifData: alifData, nafasData: nafasData };
+    await safeStorageSet('materi-state-v1', JSON.stringify(payload), true);
+  }
+
+  async function restoreMateriState(){
+    const result = await safeStorageGet('materi-state-v1', true);
+    if(!result || !result.value) return;
+    try{
+      const payload = JSON.parse(result.value);
+
+      if(payload.materiData){
+        Object.keys(payload.materiData).forEach(k=>{ materiData[k] = payload.materiData[k]; });
+        Object.keys(materiData).forEach(k=>{
+          const m = materiData[k];
+          let card = document.querySelector(`#perpusList [data-key="${k}"]`);
+          if(m.custom && !card){
+            card = document.createElement('div');
+            card.className = 'list-card';
+            card.setAttribute('data-key', k);
+            card.setAttribute('onclick', `openTabMateri('${k}','perpustakaan')`);
+            card.innerHTML = `
+              <div class="list-ic">${m.icon}</div>
+              <div class="list-body"><h4>${m.title}</h4><p>${m.subtitle}</p><span class="count">${m.tabs.length} Lapis · Baru</span></div>
+              <div class="chev">›</div>`;
+            document.getElementById('perpusList').appendChild(card);
+          }
+          if(card){
+            const h4 = card.querySelector('h4');
+            const p = card.querySelector('p');
+            const ic = card.querySelector('.list-ic');
+            if(h4) h4.textContent = m.title;
+            if(p) p.textContent = m.subtitle;
+            if(ic && k !== 'alif' && k !== 'nafas') ic.textContent = m.icon;
+          }
+        });
+      }
+      if(payload.alifData && Array.isArray(payload.alifData) && payload.alifData.length){
+        alifData.length = 0; payload.alifData.forEach(t=>alifData.push(t)); alifActive = 0; renderAlif();
+      }
+      if(payload.nafasData && Array.isArray(payload.nafasData) && payload.nafasData.length){
+        nafasData.length = 0; payload.nafasData.forEach(t=>nafasData.push(t)); nafasActive = 0; renderNafas();
+      }
+      renderAdminMateriList();
+    }catch(err){
+      // data tersimpan namun rusak/tidak terbaca — abaikan, pakai tampilan bawaan
+    }
+  }
+
+  // Utilitas debounce untuk auto-save saat mengetik (tidak perlu klik tombol)
+  function debounce(fn, delay){
+    let t;
+    return function(...args){
+      clearTimeout(t);
+      t = setTimeout(()=> fn.apply(this, args), delay);
+    };
+  }
+
+  // Debounce dengan kunci terpisah — dipakai untuk auto-save banyak field
+  // sekaligus (mis. 3 slide hero) tanpa saling membatalkan timer satu sama lain.
+  const debounceKeyTimers = {};
+  function debounceKeyed(key, fn, delay){
+    clearTimeout(debounceKeyTimers[key]);
+    debounceKeyTimers[key] = setTimeout(fn, delay);
   }
 
   // ---------- Form Tambah / Edit Materi ----------
@@ -2667,6 +3113,7 @@
     if(formMode === 'edit' && editingKey){
       updateExistingMateri(editingKey, icon, title, subtitle, tabs);
       showToast('Materi berhasil diperbarui');
+      persistMateriState();
       goAdmin();
       return;
     }
@@ -2687,6 +3134,7 @@
 
     renderAdminMateriList();
     showToast('Materi baru tersimpan di Perpustakaan');
+    persistMateriState();
     goAdmin();
   }
 
@@ -2908,18 +3356,16 @@
 
   // ---------- Persistensi Buku (agar tidak hilang saat reload / update lain) ----------
   async function persistBooks(){
-    try{
-      await window.storage.set('books-data-v1', JSON.stringify(booksData), false);
-    }catch(err){
-      console.error('Gagal menyimpan buku secara permanen:', err);
+    const result = await safeStorageSet('books-data-v1', JSON.stringify(booksData), true);
+    if(!result && !storageAvailable){
       showToast('Buku tersimpan di sesi ini, tapi gagal disimpan permanen');
     }
   }
 
   async function restoreBooks(){
+    const result = await safeStorageGet('books-data-v1', true);
+    if(!result || !result.value) return;
     try{
-      const result = await window.storage.get('books-data-v1', false);
-      if(!result || !result.value) return;
       const restored = JSON.parse(result.value);
       if(Array.isArray(restored) && restored.length){
         booksData = restored;
@@ -2928,7 +3374,7 @@
         renderAdminBookList();
       }
     }catch(err){
-      // belum ada buku tersimpan sebelumnya — abaikan
+      // data tersimpan namun rusak/tidak terbaca — abaikan
     }
   }
 
