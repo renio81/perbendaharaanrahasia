@@ -2115,18 +2115,30 @@
     }
   }
 
-  // ---------- Penyimpanan permanen yang tangguh terhadap gangguan sesaat ----------
-  // Membungkus window.storage.set dengan percobaan ulang otomatis, sehingga
-  // error sementara dari server ("Internal server error", jaringan lambat, dll)
-  // tidak langsung dianggap gagal — dicoba ulang dulu sebelum menyerah.
+  // ---------- Penyimpanan permanen via Supabase (data tersinkron untuk SEMUA orang) ----------
+  // Menggantikan window.storage (yang hanya jalan di dalam Claude) dengan
+  // database Supabase sungguhan, sehingga data yang sama terlihat oleh siapa
+  // pun yang membuka aplikasi ini dari mana saja (termasuk setelah di-deploy).
+  const SUPABASE_URL = 'https://fsqxmbptqqxdrmhqflfb.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZzcXhtYnB0cXF4ZHJtaHFmbGZiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM3MDc5MjUsImV4cCI6MjA5OTI4MzkyNX0.9efGRcB8J6YkpZz_flMgMtafwBLobPh1PvsHrAFWnDE';
+
   let storageAvailable = true;
   async function safeStorageSet(key, value, shared, retries){
     if(retries === undefined) retries = 2;
-    if(typeof window.storage === 'undefined'){ storageAvailable = false; return null; }
     try{
-      const result = await window.storage.set(key, value, shared || false);
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/app_data`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'resolution=merge-duplicates,return=minimal'
+        },
+        body: JSON.stringify({ key, value: JSON.parse(value), updated_at: new Date().toISOString() })
+      });
+      if(!res.ok) throw new Error('Supabase set failed: ' + res.status);
       storageAvailable = true;
-      return result;
+      return { key, value };
     }catch(err){
       if(retries > 0){
         await new Promise(r=> setTimeout(r, 900));
@@ -2138,11 +2150,19 @@
     }
   }
   async function safeStorageGet(key, shared){
-    if(typeof window.storage === 'undefined') return null;
     try{
-      return await window.storage.get(key, shared || false);
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/app_data?key=eq.${encodeURIComponent(key)}&select=value`, {
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+        }
+      });
+      if(!res.ok) return null;
+      const rows = await res.json();
+      if(!rows || !rows.length) return null;
+      return { key, value: JSON.stringify(rows[0].value) };
     }catch(err){
-      return null; // key belum pernah dibuat, atau gangguan sesaat — aman diabaikan
+      return null; // key belum pernah dibuat, atau gangguan jaringan sesaat — aman diabaikan
     }
   }
 
